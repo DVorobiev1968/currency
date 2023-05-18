@@ -15,7 +15,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "json-server --watch ./db/db.json --routes ./server/routes.json --port 3010"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +35,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@devexpress/dx-react-chart": "^4.0.4",
+    "@devexpress/dx-react-chart-bootstrap4": "^4.0.4",
+    "@devexpress/dx-react-chart-material-ui": "^4.0.4",
+    "@devexpress/dx-react-core": "^4.0.4",
+    "sass": "^1.62.1"
   }
 }
