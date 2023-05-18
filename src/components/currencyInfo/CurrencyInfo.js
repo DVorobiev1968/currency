@@ -93,7 +93,7 @@ const View = ({ symbol }) => {
     <>
       <div className="char__basics">
         <h1>Текущий торговый инструмент: {currentSymbol}</h1>
-        <p>Информация о тренде: {info}</p>
+        <p>Информация о торговом инструменте: {info}</p>
         <ol>
           <li>{formatDate(lastRefreshed)}</li>
           <li>Интервал {interval} сек.</li>

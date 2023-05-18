@@ -50,33 +50,33 @@ function setTS(timeSeries) {
 }
 
 const Trend = (props)=>{
-  const [symbol, setSymbol] = useState(null);
+  const [timeseries, setTimeseries] = useState(null);
 
   const { loading, error, getTimeSeriesIntraDay, clearError } =
     useAplhavantageService();
 
   useEffect(() => {
     updateCurrency();
-  }, [props.symbol]);
+  }, [props.timeSeries]);
 
-  const onCurrencyLoaded = (symbol) => {
-    console.log("onCurrencyLoaded:", symbol);
-    setSymbol(symbol);
+  const onLoadTimeSeries = (symbol) => {
+    console.log("onLoadTimeSeries:", symbol);
+    setTimeseries(symbol);
   };
 
   const updateCurrency = () => {
-    const { symbol } = props;
-    if (!symbol) {
+    const { timeseries } = props;
+    if (!timeseries) {
       return;
     }
     clearError();
-    getTimeSeriesIntraDay(symbol).then(onCurrencyLoaded);
+    getTimeSeriesIntraDay(timeseries).then(onLoadTimeSeries);
   };
 
   const errMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !symbol) ? (
-    <View symbol={symbol} />
+  const content = !(loading || error || !timeseries) ? (
+    <View timeSeries={timeseries} />
   ) : null;
 
   return (
@@ -88,8 +88,9 @@ const Trend = (props)=>{
   );
 };
 
-const View = ({ symbol }) => {
-
+const View = ({ timeSeries }) => {
+  const timeseries = setTS(timeSeries["Time Series (1min)"]);
+  console.log('LineChart.View',timeseries);
   return (
     <>
       <div className="currency__trend">
