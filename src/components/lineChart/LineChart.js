@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { PropTypes } from "prop-types";
 import Spinner from "../spinner/Spinner";
+import Skeleton from "../skeleton/Skeleton";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import useAplhavantageService from "../../services/AlphavantageService";
 import {
@@ -58,8 +59,19 @@ const Trend = (props)=>{
 
   useEffect(() => {
     console.log("LineChart.useEffect:", chart);
-    onRequest();
-  }, [props.interval]);
+    // onRequest();
+  }, [props.chartId]);
+
+  const updateChart = () => {
+    const { chartId } = props;
+    console.log('LineChart.onRequest',chartId);
+    if (!chartId) {
+      return;
+    }
+    clearError();
+    getTimeSeriesIntraDay()
+      .then(onLoadTimeSeries);
+  };
 
   const onLoadTimeSeries = (recordSet) => {
     console.log("onLoadTimeSeries:", recordSet);
@@ -77,6 +89,7 @@ const Trend = (props)=>{
       .then(onLoadTimeSeries);
   };
 
+  const skeleton = chart || loading || error ? null : <Skeleton />;
   const errMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
   const content = !(loading || error || !chart) ? (
@@ -88,6 +101,7 @@ const Trend = (props)=>{
       {errMessage}
       {spinner}
       {content}
+      {skeleton}
     </div>
   );
 };

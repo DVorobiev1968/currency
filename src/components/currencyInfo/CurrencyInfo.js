@@ -59,7 +59,6 @@ const CurrencyInfo = (props) => {
       {content}
     </div>
   );
-};
 
 function formatDate(date) {
   return `
@@ -81,7 +80,7 @@ function getMetaData(metaData) {
   return new MetaData(info,currentSymbol,lastRefreshed,interval,tz);
 }
 
-const View = ({ symbol }) => {
+
   const { info, currentSymbol, lastRefreshed, interval, tz } = getMetaData(
     symbol["Meta Data"]
   );
@@ -97,6 +96,11 @@ const View = ({ symbol }) => {
           <li>Интервал {interval} сек.</li>
           <li>Временная зона в тренде {tz}</li>
         </ol>
+        <button className="button button__main button__long"
+          onClick={() => {
+            props.onCharSelected(1)}}>
+          Trend
+        </button>
       </div>
     </>
   );
@@ -104,7 +108,7 @@ const View = ({ symbol }) => {
 
 
 CurrencyInfo.propTypes = {
-  charId: PropTypes.number,
+  onChartSelected: PropTypes.func.isRequired,
 };
 
 export default CurrencyInfo;
