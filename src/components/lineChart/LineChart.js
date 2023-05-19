@@ -50,33 +50,37 @@ function setTS(timeSeries) {
 }
 
 const Trend = (props)=>{
-  const [timeseries, setTimeseries] = useState(null);
+  const [interval,setInterval] = useState(null);
+  const [chart,setChart] = useState(null);
 
   const { loading, error, getTimeSeriesIntraDay, clearError } =
     useAplhavantageService();
 
   useEffect(() => {
-    updateCurrency();
-  }, [props.timeSeries]);
+    console.log("LineChart.useEffect:", chart);
+    onRequest();
+  }, [props.interval]);
 
-  const onLoadTimeSeries = (symbol) => {
-    console.log("onLoadTimeSeries:", symbol);
-    setTimeseries(symbol);
+  const onLoadTimeSeries = (recordSet) => {
+    console.log("onLoadTimeSeries:", recordSet);
+    setChart(recordSet);
   };
 
-  const updateCurrency = () => {
-    const { timeseries } = props;
-    if (!timeseries) {
+  const onRequest = () => {
+    const { interval } = props;
+    console.log('LineChart.onRequest',interval);
+    if (!interval) {
       return;
     }
     clearError();
-    getTimeSeriesIntraDay(timeseries).then(onLoadTimeSeries);
+    getTimeSeriesIntraDay()
+      .then(onLoadTimeSeries);
   };
 
   const errMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !timeseries) ? (
-    <View timeSeries={timeseries} />
+  const content = !(loading || error || !chart) ? (
+    <View timeSeries={chart} />
   ) : null;
 
   return (

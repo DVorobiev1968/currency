@@ -10,7 +10,7 @@ function App() {
           <CurrencyInfo symbol={'IBM'}/>
         </div>
         <div className='chart__content'>
-          <Trend symbol={'IBM'}/>
+          <Trend interval={'1min'}/>
         </div>
       </main>
     </div>

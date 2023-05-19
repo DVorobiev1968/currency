@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { PropTypes } from "prop-types";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-import Skeleton from "../skeleton/Skeleton";
 import useAplhavantageService from "../../services/AlphavantageService";
 import "./currencyInfo.scss";
 
@@ -23,38 +22,38 @@ class MetaData {
 }
 const CurrencyInfo = (props) => {
   const [symbol, setSymbol] = useState(null);
+  const [metaData, setMetaData] =useState(null);
 
-  const { loading, error, getTimeSeriesIntraDay, clearError } =
+  const { loading, error, getMetaData, clearError } =
     useAplhavantageService();
 
   useEffect(() => {
-    updateCurrency();
+    onRequest();
   }, [props.symbol]);
 
-  const onCurrencyLoaded = (symbol) => {
-    console.log("onCurrencyLoaded:", symbol);
-    setSymbol(symbol);
+  const onCurrencyLoaded = (recordSet) => {
+    console.log("CurrencyLoaded.onCurrencyLoaded:", recordSet,loading);
+    setMetaData(recordSet);
   };
 
-  const updateCurrency = () => {
+  const onRequest = () => {
     const { symbol } = props;
+    console.log('CurrencyInfo.onRequest:',symbol,loading);
     if (!symbol) {
       return;
     }
     clearError();
-    getTimeSeriesIntraDay(symbol).then(onCurrencyLoaded);
+    getMetaData(symbol).then(onCurrencyLoaded);
   };
 
-  const skeleton = symbol || loading || error ? null : <Skeleton />;
   const errMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !symbol) ? (
-    <View symbol={symbol} />
+  const content = !(loading || error || !metaData) ? (
+    <View symbol={metaData} />
   ) : null;
 
   return (
     <div className="currency__info">
-      {skeleton}
       {errMessage}
       {spinner}
       {content}
@@ -86,8 +85,7 @@ const View = ({ symbol }) => {
   const { info, currentSymbol, lastRefreshed, interval, tz } = getMetaData(
     symbol["Meta Data"]
   );
-  // console.log('CurrencyInfo.View:',ts);
-  // console.log('CurrencyInfo.View:',meta);
+  console.log('CurrencyInfo.View:',symbol);
 
   return (
     <>

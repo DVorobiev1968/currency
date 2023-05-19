@@ -9,7 +9,17 @@ const useAplhavantageService = () => {
   const _apiKey = "apikey=F69SODF06R3FE934";
   const _intraDAY = "?function=TIME_SERIES_INTRADAY";
 
-  const getTimeSeriesIntraDay = async (symbol, interval='1min') =>{
+  const getTimeSeriesIntraDay = async (symbol='IBM', interval='1min') =>{
+    const response =await request(
+      (process.env.NODE_ENV === 'development') ? 
+      `${_apiBase}` :
+      `${_apiBase}${_intraDAY}&symbol=${symbol}&interval=${interval}&outputsize=compact&datatype=json&${_apiKey}`
+    );
+    console.log(response);
+    return response;
+  }
+
+  const getMetaData = async (symbol='IBM', interval='1min') =>{
     const response =await request(
       (process.env.NODE_ENV === 'development') ? 
       `${_apiBase}` :
@@ -28,6 +38,6 @@ const useAplhavantageService = () => {
     };
   }
 
-  return {loading, error, clearError, getTimeSeriesIntraDay};
+  return {loading, error, clearError, getTimeSeriesIntraDay, getMetaData};
 }
 export default useAplhavantageService;
