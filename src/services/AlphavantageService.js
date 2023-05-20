@@ -19,7 +19,7 @@ const useAplhavantageService = () => {
     return response;
   }
 
-  const getMetaData = async (symbol='IBM', interval='1min') =>{
+  const getSymbolMetaData = async (symbol='IBM', interval='1min') =>{
     const response =await request(
       (process.env.NODE_ENV === 'development') ? 
       `${_apiBase}` :
@@ -38,6 +38,6 @@ const useAplhavantageService = () => {
     };
   }
 
-  return {loading, error, clearError, getTimeSeriesIntraDay, getMetaData};
+  return {loading, error, clearError, getTimeSeriesIntraDay, getSymbolMetaData};
 }
 export default useAplhavantageService;

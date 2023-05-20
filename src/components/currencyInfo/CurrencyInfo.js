@@ -20,45 +20,6 @@ class MetaData {
     this.tz = tz;
   }
 }
-const CurrencyInfo = (props) => {
-  const [symbol, setSymbol] = useState(null);
-  const [metaData, setMetaData] =useState(null);
-
-  const { loading, error, getMetaData, clearError } =
-    useAplhavantageService();
-
-  useEffect(() => {
-    onRequest();
-  }, [props.symbol]);
-
-  const onCurrencyLoaded = (recordSet) => {
-    console.log("CurrencyLoaded.onCurrencyLoaded:", recordSet,loading);
-    setMetaData(recordSet);
-  };
-
-  const onRequest = () => {
-    const { symbol } = props;
-    console.log('CurrencyInfo.onRequest:',symbol,loading);
-    if (!symbol) {
-      return;
-    }
-    clearError();
-    getMetaData(symbol).then(onCurrencyLoaded);
-  };
-
-  const errMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !metaData) ? (
-    <View symbol={metaData} />
-  ) : null;
-
-  return (
-    <div className="currency__info">
-      {errMessage}
-      {spinner}
-      {content}
-    </div>
-  );
 
 function formatDate(date) {
   return `
@@ -80,7 +41,7 @@ function getMetaData(metaData) {
   return new MetaData(info,currentSymbol,lastRefreshed,interval,tz);
 }
 
-
+const View = ({symbol})=>{
   const { info, currentSymbol, lastRefreshed, interval, tz } = getMetaData(
     symbol["Meta Data"]
   );
@@ -96,16 +57,56 @@ function getMetaData(metaData) {
           <li>Интервал {interval} сек.</li>
           <li>Временная зона в тренде {tz}</li>
         </ol>
-        <button className="button button__main button__long"
-          onClick={() => {
-            props.onCharSelected(1)}}>
-          Trend
-        </button>
       </div>
     </>
   );
 };
 
+const CurrencyInfo = (props) => {
+  const [symbol, setSymbol] = useState(null);
+  const [metaData, setMetaData] =useState(null);
+
+  const { loading, error, getSymbolMetaData, clearError } =
+    useAplhavantageService();
+
+  useEffect(() => {
+    onRequest();
+  }, [props.symbol]);
+
+  const onCurrencyLoaded = (recordSet) => {
+    console.log("CurrencyLoaded.onCurrencyLoaded:", recordSet,loading);
+    setMetaData(recordSet);
+  };
+
+  const onRequest = () => {
+    const { symbol } = props;
+    console.log('CurrencyInfo.onRequest:',symbol,loading);
+    if (!symbol) {
+      return;
+    }
+    clearError();
+    getSymbolMetaData(symbol).then(onCurrencyLoaded);
+  };
+
+  const errMessage = error ? <ErrorMessage /> : null;
+  const spinner = loading ? <Spinner /> : null;
+  const content = !(loading || error || !metaData) ? (
+    <View symbol={metaData} />
+  ) : null;
+
+  return (
+    <div className="currency__info">
+      {errMessage}
+      {spinner}
+      {content}
+      <button className="button button__main button__long"
+          onClick={() => {
+            props.onChartSelected(1)}}>
+          Trend
+        </button>
+    </div>
+  );
+}
 
 CurrencyInfo.propTypes = {
   onChartSelected: PropTypes.func.isRequired,

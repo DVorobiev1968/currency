@@ -59,12 +59,14 @@ const Trend = (props)=>{
 
   useEffect(() => {
     console.log("LineChart.useEffect:", chart);
-    // onRequest();
+    if (props.chartId!=null){
+      updateChart();
+    }
   }, [props.chartId]);
 
   const updateChart = () => {
     const { chartId } = props;
-    console.log('LineChart.onRequest',chartId);
+    console.log('LineChart.updateChart',chartId);
     if (!chartId) {
       return;
     }
