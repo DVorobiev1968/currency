@@ -8,6 +8,7 @@ function App() {
   const[selectedChart,setChart]=useState(null);
 
   const onChartSelected=(id)=>{
+    console.log('App.onChartSelected',id);
     setChart(id);
   }
 

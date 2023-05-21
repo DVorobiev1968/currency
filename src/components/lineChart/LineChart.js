@@ -36,6 +36,7 @@ const data = [
   { argument: 3, value: 30 },
 ];
 
+let tempTS;
 function setTS(timeSeries) {
   const ts = [];
   for (const [key, value] of Object.entries(timeSeries)) {
@@ -51,11 +52,12 @@ function setTS(timeSeries) {
 }
 
 const Trend = (props)=>{
-  const [interval,setInterval] = useState(null);
+  // const [interval,setInterval] = useState(null);
   const [chart,setChart] = useState(null);
 
   const { loading, error, getTimeSeriesIntraDay, clearError } =
     useAplhavantageService();
+
 
   useEffect(() => {
     console.log("LineChart.useEffect:", chart);
@@ -77,6 +79,8 @@ const Trend = (props)=>{
 
   const onLoadTimeSeries = (recordSet) => {
     console.log("onLoadTimeSeries:", recordSet);
+    tempTS=recordSet['Time Series (1min)'];
+    console.log('LineChart.onLoadTimeSeries',tempTS);
     setChart(recordSet);
   };
 
@@ -91,11 +95,11 @@ const Trend = (props)=>{
       .then(onLoadTimeSeries);
   };
 
-  const skeleton = chart || loading || error ? null : <Skeleton />;
+  const skeleton = tempTS || loading || error ? null : <Skeleton />;
   const errMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !chart) ? (
-    <View timeSeries={chart} />
+  const content = !(error || !tempTS) ? (
+    <View timeSeries={tempTS} />
   ) : null;
 
   return (
@@ -109,8 +113,8 @@ const Trend = (props)=>{
 };
 
 const View = ({ timeSeries }) => {
-  const timeseries = setTS(timeSeries["Time Series (1min)"]);
-  console.log('LineChart.View',timeseries);
+  const timeseries = setTS(timeSeries);
+  console.log('LineChart.View',timeseries,data);
   return (
     <>
       <div className="currency__trend">
